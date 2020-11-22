@@ -4,8 +4,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Editing;
-using Microsoft.CodeAnalysis.Rename;
-using Microsoft.CodeAnalysis.Text;
+using MoreStaticAnalisis.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -22,7 +21,12 @@ namespace MoreStaticAnalisis
 	{
 		public sealed override ImmutableArray<string> FixableDiagnosticIds
 		{
-			get { return ImmutableArray.Create(FlagEnumAnalyzer.DiagnosticId); }
+			get
+			{
+				return ImmutableArray.Create(
+			  FlagEnumAnalyzer.EnumValueIsNotPowerOfTwoId,
+			  FlagEnumAnalyzer.EnumValueIsZeroId);
+			}
 		}
 
 		public sealed override FixAllProvider GetFixAllProvider()
@@ -48,10 +52,49 @@ namespace MoreStaticAnalisis
 			// Register a code action that will invoke the fix.
 			context.RegisterCodeFix(
 				CodeAction.Create(
-					title: CodeFixResources.CodeFixTitle,
+					title: CodeFixResources.ChangeToNextBinaryValueTitle,
 					createChangedSolution: c => ChangeEnumValueAsync(context.Document, offendingFieldDeclaration, values, model, c),
-					equivalenceKey: nameof(CodeFixResources.CodeFixTitle)),
+					equivalenceKey: nameof(CodeFixResources.ChangeToNextBinaryValueTitle)),
 				diagnostic);
+			if (diagnostic.Id == FlagEnumAnalyzer.EnumValueIsZeroId)
+				RegisterAppendAttributeCodefix<NoneAttribute>(
+					context,
+					CodeFixResources.AddNoneAttribute,
+					nameof(CodeFixResources.AddNoneAttribute),
+					diagnostic,
+					offendingFieldDeclaration,
+					model);
+			else
+			{
+				RegisterAppendAttributeCodefix<CombinedFlagsAttribute>(
+					context,
+					CodeFixResources.AddCombinedFlagsAttribute,
+					nameof(CodeFixResources.AddCombinedFlagsAttribute),
+					diagnostic,
+					offendingFieldDeclaration,
+					model);
+			}
+		}
+
+		private void RegisterAppendAttributeCodefix<AttributeType>(
+			CodeFixContext context,
+			string title,
+			string equivalenceKey,
+			Diagnostic diagnostic,
+			EnumMemberDeclarationSyntax offendingFieldDeclaration,
+			SemanticModel model) where AttributeType : Attribute
+		{
+			context.RegisterCodeFix(
+				CodeAction.Create(
+					title: title,
+					createChangedSolution: c => AppendAttributeAsync(
+						context.Document,
+						offendingFieldDeclaration,
+						AttributeUtility.GetAttributeName<AttributeType>(),
+						AttributeUtility.GetAttributeNamespace<AttributeType>(),
+						c),
+					equivalenceKey: equivalenceKey),
+			diagnostic);
 		}
 
 		private async Task<Solution> ChangeEnumValueAsync(
@@ -72,5 +115,39 @@ namespace MoreStaticAnalisis
 			editor.ReplaceNode(valueDeclaration, valueDeclaration.WithEqualsValue(SyntaxFactory.EqualsValueClause(expression)));
 			return editor.GetChangedDocument().Project.Solution;
 		}
+
+		private async Task<Solution> AppendAttributeAsync(
+			Document document,
+			EnumMemberDeclarationSyntax valueDeclaration,
+			string attributeName,
+			string @namespace,
+			CancellationToken cancellationToken)
+		{
+			var newSymbol = valueDeclaration.WithAttributeLists(
+				SyntaxFactory.List(new[] 
+				{
+					SyntaxFactory.AttributeList(
+						SyntaxFactory.SeparatedList(
+							new[]
+							{
+								SyntaxFactory.Attribute(
+									SyntaxFactory.ParseName(attributeName))
+							}
+						)
+					)
+				})
+			);
+
+			var editor = await DocumentEditor.CreateAsync(document, cancellationToken);
+			var root = valueDeclaration.FirstAncestorOrSelf<CompilationUnitSyntax>();
+			var newRoot= root.ReplaceNode(valueDeclaration, newSymbol);
+			if (!root.Usings.Any(x => x.Name.ToFullString() == @namespace))
+			{
+				newRoot = newRoot.AddUsings(SyntaxFactory.UsingDirective(SyntaxFactory.ParseName(@namespace)));
+			}
+				editor.ReplaceNode(root, newRoot);
+			return editor.GetChangedDocument().Project.Solution;
+		}
+
 	}
 }

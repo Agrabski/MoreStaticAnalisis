@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\MoreStaticAnalisis.Attributes\MoreStaticAnalisis.Attributes.csproj" />
     <ProjectReference Include="..\..\Utilities\Utilities.csproj" />
     <ProjectReference Include="..\MoreStaticAnalisis\MoreStaticAnalisis.csproj" />
   </ItemGroup>

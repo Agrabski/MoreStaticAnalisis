@@ -122,7 +122,7 @@
     <comment>An optional longer localizable description of the diagnostic.</comment>
   </data>
   <data name="AnalyzerMessageFormat" xml:space="preserve">
-    <value>Enum value {0} does not have a value that is a power of two.  Did you mean to mark it with CombinedFlagsAttribute?</value>
+    <value>Enum value {0} has invalid value.  Did you mean to mark it with {1}?</value>
     <comment>The format-able message the diagnostic displays.</comment>
   </data>
   <data name="AnalyzerTitle" xml:space="preserve">

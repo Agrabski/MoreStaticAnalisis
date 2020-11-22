@@ -117,7 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CodeFixTitle" xml:space="preserve">
+  <data name="AddCombinedFlagsAttribute" xml:space="preserve">
+    <value>Add CombinedFlags attribute</value>
+  </data>
+  <data name="AddNoneAttribute" xml:space="preserve">
+    <value>Add None attribute</value>
+  </data>
+  <data name="ChangeToNextBinaryValueTitle" xml:space="preserve">
     <value>Change to next binary value</value>
     <comment>The title of the code fix.</comment>
   </data>

@@ -61,11 +61,29 @@ namespace MoreStaticAnalisis {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add CombinedFlags attribute.
+        /// </summary>
+        internal static string AddCombinedFlagsAttribute {
+            get {
+                return ResourceManager.GetString("AddCombinedFlagsAttribute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add None attribute.
+        /// </summary>
+        internal static string AddNoneAttribute {
+            get {
+                return ResourceManager.GetString("AddNoneAttribute", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change to next binary value.
         /// </summary>
-        internal static string CodeFixTitle {
+        internal static string ChangeToNextBinaryValueTitle {
             get {
-                return ResourceManager.GetString("CodeFixTitle", resourceCulture);
+                return ResourceManager.GetString("ChangeToNextBinaryValueTitle", resourceCulture);
             }
         }
     }

@@ -70,7 +70,7 @@ namespace MoreStaticAnalisis {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enum value {0} does not have a value that is a power of two.  Did you mean to mark it with CombinedFlagsAttribute?.
+        ///   Looks up a localized string similar to Enum value {0} has invalid value.  Did you mean to mark it with {1}?.
         /// </summary>
         internal static string AnalyzerMessageFormat {
             get {
