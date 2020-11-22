@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -9,34 +9,53 @@
 
   <PropertyGroup>
     <PackageId>MoreStaticAnalisis</PackageId>
-    <PackageVersion>1.0.0.0</PackageVersion>
-    <Authors>adamg</Authors>
-    <PackageProjectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</PackageProjectUrl>
-    <PackageIconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</PackageIconUrl>
-    <RepositoryUrl>http://REPOSITORY_URL_HERE_OR_DELETE_THIS_LINE</RepositoryUrl>
+    <PackageVersion>0.1.0.0</PackageVersion>
+    <Authors>Adam Grabski</Authors>
+    <PackageProjectUrl>https://github.com/Agrabski/MoreStaticAnalisis</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Agrabski/MoreStaticAnalisis</RepositoryUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Description>MoreStaticAnalisis</Description>
-    <PackageReleaseNotes>Summary of changes made in this release of the package.</PackageReleaseNotes>
-    <Copyright>Copyright</Copyright>
-    <PackageTags>MoreStaticAnalisis, analyzers</PackageTags>
+    <Description>Additional static analisys tools for typical C# usage</Description>
+    <PackageReleaseNotes>Initial release</PackageReleaseNotes>
+    <Copyright>Adam Grabski 2020</Copyright>
+    <PackageTags>MoreStaticAnalisis, analyzers, enum</PackageTags>
     <NoPackageAnalysis>true</NoPackageAnalysis>
 
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_AddAnalyzersToOutput</TargetsForTfmSpecificContentInPackage>
+
+    <Version>0.1.0</Version>
+
+    <Product>MoreStaticAnalisis</Product>
+
+    <Company />
+
+    <PackageLicenseFile>licence.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MoreStaticAnalisis.CodeFixes\MoreStaticAnalisis.CodeFixes.csproj" />
+    <ProjectReference Include="..\..\MoreStaticAnalisis.Attributes\MoreStaticAnalisis.Attributes.csproj">
+      <IncludeAssets>all</IncludeAssets>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Utilities\Utilities.csproj" />
+    <ProjectReference Include="..\MoreStaticAnalisis.CodeFixes\MoreStaticAnalisis.CodeFixes.csproj">
+      <IncludeAssets>all</IncludeAssets>
+    </ProjectReference>
     <ProjectReference Include="..\MoreStaticAnalisis\MoreStaticAnalisis.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="tools\*.ps1" CopyToOutputDirectory="Always" Pack="true" PackagePath="" />
+    <None Include="..\..\licence.txt">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <Target Name="_AddAnalyzersToOutput">
     <ItemGroup>
       <TfmSpecificPackageFile Include="$(OutputPath)\MoreStaticAnalisis.dll" PackagePath="analyzers/dotnet/cs" />
       <TfmSpecificPackageFile Include="$(OutputPath)\MoreStaticAnalisis.CodeFixes.dll" PackagePath="analyzers/dotnet/cs" />
+      <TfmSpecificPackageFile Include="$(OutputPath)\Utilities.dll" PackagePath="analyzers/dotnet/cs" />
+      <TfmSpecificPackageFile Include="$(OutputPath)\MoreStaticAnalisis.Attributes.dll" PackagePath="lib/$(TargetFramework)" />
     </ItemGroup>
   </Target>
 
